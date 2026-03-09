@@ -9,10 +9,9 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script
-        src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
     <script>
@@ -27,164 +26,73 @@
     </script>
 
     <style>
-        body {
-            background-color: #0f172a;
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .card-hover:hover {
-            transform: translateY(-4px);
-            border-color: #3b82f6;
-            box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.3);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        /* Loader y PDF */
-        #login-screen {
-            transition: opacity 0.5s ease-out, visibility 0.5s;
-        }
-
-        .hidden-login {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .loader {
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            border-top: 3px solid #3b82f6;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .pdf-mode {
-            width: 750px !important;
-            margin: 0 auto !important;
-            background-color: #0f172a !important;
-            color: white !important;
-            padding: 20px !important;
-        }
-
-        .pdf-mode .grid-responsive {
-            display: grid !important;
-            grid-template-columns: 45% 55% !important;
-            gap: 20px !important;
-            align-items: center !important;
-        }
-
-        .pdf-mode .no-print {
-            display: none !important;
-        }
-
-        .pdf-mode table {
-            font-size: 9px !important;
-        }
-
-        .pdf-mode td,
-        .pdf-mode th {
-            padding: 4px 4px !important;
-        }
-
-        /* Botones */
-        .btn-filter {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 6px 12px;
-            border-radius: 9999px;
-            border: 1px solid;
-            transition: all 0.2s;
-            cursor: pointer;
-            display: inline-block;
-            margin: 0 2px;
-        }
-
-        .btn-active {
-            background-color: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-inactive {
-            background-color: transparent;
-            color: #94a3b8;
-            border-color: #334155;
-        }
-
-        .btn-inactive:hover {
-            border-color: #94a3b8;
-            color: white;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .notification-anim {
-            animation: slideIn 0.5s ease-out forwards;
-        }
-
-        /* NUEVO: Efecto Glow sutil para los charts */
-        .chart-container-glow {
-            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.15));
-        }
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .card-hover:hover { transform: translateY(-4px); border-color: #3b82f6; box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.3); transition: all 0.3s ease; cursor: pointer; }
+        #login-screen { transition: opacity 0.5s ease-out, visibility 0.5s; }
+        .hidden-login { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loader { border: 3px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top: 3px solid #3b82f6; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .btn-filter { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 6px 12px; border-radius: 9999px; border: 1px solid; transition: all 0.2s; cursor: pointer; display: inline-block; margin: 0 2px; }
+        .btn-active { background-color: #3b82f6; color: white; border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .btn-inactive { background-color: transparent; color: #94a3b8; border-color: #334155; }
+        .btn-inactive:hover { border-color: #94a3b8; color: white; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .notification-anim { animation: slideIn 0.5s ease-out forwards; }
+        .chart-container-glow { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.15)); }
+        #disclaimer-screen { transition: opacity 0.5s ease-out, visibility 0.5s; }
+        .hidden-disclaimer { opacity: 0; visibility: hidden; pointer-events: none; }
+        .disclaimer-scroll::-webkit-scrollbar { width: 6px; }
+        .disclaimer-scroll::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.5); border-radius: 3px; }
+        .disclaimer-scroll::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 3px; }
     </style>
 </head>
 
 <body class="antialiased min-h-screen flex flex-col overflow-hidden" id="main-body">
 
-    <div id="login-screen" class="fixed inset-0 z-[100] bg-[#0f172a] flex flex-col items-center justify-center p-4">
-        <div
-            class="glass-panel p-8 rounded-2xl w-full max-w-md border border-gray-700 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent">
+    <div id="disclaimer-screen" class="fixed inset-0 z-[110] bg-[#0f172a] flex flex-col items-center justify-center p-4 hidden">
+        <div class="glass-panel p-8 rounded-2xl w-full max-w-2xl border border-gray-700 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
+            <div class="text-center mb-6">
+                <div class="flex justify-center mb-4">
+                    <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-full p-3">
+                        <i class="ph-bold ph-warning text-yellow-500 text-3xl"></i>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold text-white">Aviso Legal</h2>
+                <p class="text-gray-400 text-sm mt-2">I-Desk Asset Management</p>
             </div>
+            <div class="disclaimer-scroll max-h-[50vh] overflow-y-auto bg-slate-900/80 rounded-xl p-6 border border-gray-700 mb-6">
+                <p class="text-gray-300 text-sm leading-relaxed mb-4">Las carteras de inversión publicadas en este sitio constituyen carteras modelo elaboradas con fines exclusivamente informativos e ilustrativos, y no constituyen recomendaciones de inversión, ni oferta pública de valores negociables en los términos de la normativa vigente del mercado de capitales de la República Argentina. Las inversiones en instrumentos financieros implican riesgos y los rendimientos pasados no garantizan resultados futuros, pudiendo producirse incluso la pérdida total o parcial del capital invertido.</p>
+                <p class="text-yellow-500/80 text-xs font-bold uppercase tracking-wider mb-3">Aviso Legal Completo</p>
+                <p class="text-gray-400 text-xs leading-relaxed mb-3">La información contenida en el presente sitio web tiene carácter meramente informativo y educativo. Las carteras publicadas constituyen carteras modelo o simulaciones teóricas, elaboradas con fines exclusivamente ilustrativos, y no constituyen asesoramiento financiero personalizado, recomendación individual de inversión, oferta pública de valores negociables, ni solicitud de oferta en los términos de la normativa vigente del mercado de capitales de la República Argentina, conforme lo dispuesto en la Ley de Mercado de Capitales N° 26.831 y las normas de la Comisión Nacional de Valores.</p>
+                <p class="text-gray-400 text-xs leading-relaxed mb-3">Las carteras modelo se elaboran sobre supuestos de mercado y criterios generales de asignación de activos, por lo que pueden diferir de las carteras efectivamente implementadas por inversores. Asimismo, los resultados teóricos o históricos no contemplan necesariamente comisiones, costos operativos, impuestos ni condiciones particulares de ejecución que puedan afectar el resultado final de una inversión.</p>
+                <p class="text-gray-400 text-xs leading-relaxed mb-3">Las inversiones en instrumentos financieros implican riesgos, incluyendo, entre otros, riesgo de mercado, crédito, liquidez, tipo de cambio y riesgos regulatorios. En consecuencia, los rendimientos pasados no constituyen garantía ni indicación de resultados futuros, pudiendo incluso producirse la pérdida total o parcial del capital invertido.</p>
+                <p class="text-gray-400 text-xs leading-relaxed mb-3">La información aquí contenida ha sido obtenida de fuentes consideradas confiables; no obstante, I-DESK S.A.S. no garantiza la exactitud, integridad o actualización de dicha información y no asume responsabilidad alguna por errores u omisiones que pudieran existir ni por las decisiones de inversión adoptadas sobre la base de la información contenida en este sitio.</p>
+                <p class="text-gray-400 text-xs leading-relaxed mb-3">Se recomienda a los potenciales inversores evaluar de manera independiente la conveniencia de cualquier inversión considerando su situación financiera, objetivos de inversión, horizonte temporal y tolerancia al riesgo, pudiendo recurrir a asesores financieros, legales y/o impositivos debidamente habilitados.</p>
+                <p class="text-gray-400 text-xs leading-relaxed">El acceso al presente sitio implica el conocimiento y aceptación de los términos aquí establecidos. Queda prohibida la reproducción, distribución o divulgación total o parcial del contenido sin la autorización previa y expresa de I-DESK S.A.S.</p>
+            </div>
+            <div class="flex items-start gap-3 mb-6">
+                <input type="checkbox" id="disclaimer-check" class="mt-1 w-4 h-4 accent-blue-500 cursor-pointer flex-shrink-0" onchange="toggleDisclaimerBtn()">
+                <label for="disclaimer-check" class="text-gray-300 text-sm cursor-pointer select-none">He leído y acepto los términos del aviso legal y descargo de responsabilidad.</label>
+            </div>
+            <button id="disclaimer-accept-btn" onclick="acceptDisclaimer()" disabled class="w-full bg-blue-600/30 text-blue-300/50 font-bold py-3 rounded-lg transition cursor-not-allowed">Aceptar y Continuar</button>
+        </div>
+    </div>
+
+    <div id="login-screen" class="fixed inset-0 z-[100] bg-[#0f172a] flex flex-col items-center justify-center p-4">
+        <div class="glass-panel p-8 rounded-2xl w-full max-w-md border border-gray-700 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent"></div>
             <div class="text-center mb-8">
-                <div class="flex justify-center mb-4"><img src="logo.png"
-                        onerror="this.src='https://via.placeholder.com/80?text=IDesk'"
-                        class="w-20 h-20 rounded-full shadow-lg border-2 border-blue-500/30 object-cover"></div>
+                <div class="flex justify-center mb-4"><img src="logo.png" onerror="this.src='https://via.placeholder.com/80?text=IDesk'" class="w-20 h-20 rounded-full shadow-lg border-2 border-blue-500/30 object-cover"></div>
                 <h2 class="text-2xl font-bold text-white">Acceso Privado</h2>
                 <p class="text-gray-400 text-sm mt-2">I-Desk Asset Management</p>
             </div>
             <form onsubmit="intentarLogin(event)" class="space-y-4">
-                <input type="text" id="input-user"
-                    class="w-full bg-slate-900 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-600"
-                    placeholder="Usuario">
-                <input type="password" id="input-pass"
-                    class="w-full bg-slate-900 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-600"
-                    placeholder="Contraseña">
+                <input type="text" id="input-user" class="w-full bg-slate-900 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-600" placeholder="Usuario">
+                <input type="password" id="input-pass" class="w-full bg-slate-900 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-600" placeholder="Contraseña">
                 <div id="error-msg" class="text-red-400 text-xs text-center hidden">Credenciales incorrectas</div>
-                <button type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Ingresar</button>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">Ingresar</button>
             </form>
         </div>
     </div>
@@ -192,16 +100,13 @@
     <nav class="border-b border-gray-800 bg-slate-900/80 sticky top-0 z-30 backdrop-blur-md">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img src="logo.png" onerror="this.style.display='none'"
-                    class="w-8 h-8 rounded-full border border-blue-500/50 object-cover">
-                <span class="text-lg md:text-xl font-bold tracking-tight text-white">I-Desk <span
-                        class="text-blue-500">Asset Management</span></span>
+                <img src="logo.png" onerror="this.style.display='none'" class="w-8 h-8 rounded-full border border-blue-500/50 object-cover">
+                <span class="text-lg md:text-xl font-bold tracking-tight text-white">I-Desk <span class="text-blue-500">Asset Management</span></span>
             </div>
             <div class="hidden md:flex space-x-8 text-sm font-medium">
                 <a href="#carteras" class="text-gray-400 hover:text-white transition">Carteras</a>
                 <a href="#trades" class="text-gray-400 hover:text-white transition">Trade Ideas</a>
-                <button onclick="logout()"
-                    class="text-red-400 hover:text-red-300 transition text-xs border border-red-900/50 px-3 py-1 rounded bg-red-900/10">Salir</button>
+                <button onclick="logout()" class="text-red-400 hover:text-red-300 transition text-xs border border-red-900/50 px-3 py-1 rounded bg-red-900/10">Salir</button>
             </div>
         </div>
     </nav>
@@ -229,67 +134,47 @@
 
     <div id="portfolio-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closePortfolioModal()"></div>
-        <div
-            class="relative bg-slate-900 border border-gray-700 rounded-2xl w-full max-w-5xl max-h-[95vh] overflow-y-auto shadow-2xl flex flex-col">
-
-            <div
-                class="flex justify-between items-center p-4 border-b border-gray-800 bg-slate-800/50 sticky top-0 z-10">
+        <div class="relative bg-slate-900 border border-gray-700 rounded-2xl w-full max-w-5xl max-h-[95vh] overflow-y-auto shadow-2xl flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-slate-800/50 sticky top-0 z-10">
                 <h3 class="text-gray-400 text-sm font-mono">VISTA DE DETALLE</h3>
                 <div class="flex gap-2">
-                    <button id="btn-download-pdf" onclick="downloadPortfolioPDF()"
-                        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition font-medium"><i
-                            class="ph-bold ph-download-simple"></i> Descargar PDF</button>
-                    <button onclick="closePortfolioModal()" class="text-gray-400 hover:text-white p-2"><i
-                            class="ph-bold ph-x text-xl"></i></button>
+                    <button id="btn-download-pdf" onclick="downloadPortfolioPDF()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition font-medium"><i class="ph-bold ph-download-simple"></i> Descargar PDF</button>
+                    <button onclick="closePortfolioModal()" class="text-gray-400 hover:text-white p-2"><i class="ph-bold ph-x text-xl"></i></button>
                 </div>
             </div>
-
             <div class="w-full flex justify-center bg-slate-900">
                 <div id="printable-area" class="p-8 md:p-12 text-white w-full transition-all duration-300">
-
-                    <div class="flex justify-between items-start mb-8 border-b border-gray-700 pb-6">
+                    <div class="flex justify-between items-start mb-8 border-b border-gray-700 pb-6 pdf-header">
                         <div>
                             <span class="text-blue-500 font-bold text-sm tracking-widest uppercase">PORTAFOLIO</span>
                             <h2 id="pm-title" class="text-3xl md:text-5xl font-bold mt-2">Nombre</h2>
-                            <p id="pm-desc" class="text-gray-400 mt-3 max-w-xl leading-relaxed text-lg">Descripción...
-                            </p>
+                            <p id="pm-desc" class="text-gray-400 mt-3 max-w-xl leading-relaxed text-lg">Descripción...</p>
                         </div>
                         <div class="text-right hidden sm:block">
-                            <div class="text-xl font-bold text-white">I-Desk <span class="text-blue-500">Asset
-                                    Management</span></div>
+                            <div class="text-xl font-bold text-white">I-Desk <span class="text-blue-500">Asset Management</span></div>
                             <div id="pdf-timestamp" class="text-xs text-gray-500 mt-1 font-mono"></div>
                         </div>
                     </div>
-
-                    <div id="modal-content-grid"
-                        class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-8 grid-responsive">
-
+                    <div id="modal-content-grid" class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-8 grid-responsive">
                         <div class="w-full flex flex-col items-center justify-center">
-                            <div id="chart-container-div"
-                                class="h-[450px] w-full flex items-center justify-center relative chart-container-glow">
+                            <div id="chart-container-div" class="h-[450px] w-full flex items-center justify-center relative chart-container-glow">
                                 <canvas id="modal-chart"></canvas>
                             </div>
                             <div class="w-full flex justify-center gap-2 mt-6 no-print flex-wrap">
-                                <button onclick="updateChartMode('general')" id="btn-general"
-                                    class="btn-filter btn-inactive">General</button>
-                                <button onclick="updateChartMode('activo')" id="btn-activo"
-                                    class="btn-filter btn-active">Activo</button>
-                                <button onclick="updateChartMode('tipo')" id="btn-tipo"
-                                    class="btn-filter btn-inactive">Tipo</button>
-                                <button onclick="updateChartMode('moneda')" id="btn-moneda"
-                                    class="btn-filter btn-inactive">Moneda</button>
+                                <button onclick="updateChartMode('general')" id="btn-general" class="btn-filter btn-inactive">General</button>
+                                <button onclick="updateChartMode('activo')" id="btn-activo" class="btn-filter btn-active">Activo</button>
+                                <button onclick="updateChartMode('tipo')" id="btn-tipo" class="btn-filter btn-inactive">Tipo</button>
+                                <button onclick="updateChartMode('moneda')" id="btn-moneda" class="btn-filter btn-inactive">Moneda</button>
                             </div>
                         </div>
-
                         <div class="w-full">
-                            <div class="flex items-center gap-3 mb-4">
+                            <div class="flex items-center gap-3 mb-4 composicion-header">
                                 <div class="h-6 w-1 bg-blue-500 rounded-full"></div>
-                                <h4 class="text-lg font-bold">Composición de Activos</h4>
+                                <h4 class="text-lg font-bold section-title">Composición de Activos</h4>
                             </div>
                             <div class="overflow-hidden rounded-xl border border-gray-700 bg-slate-800/30">
                                 <table class="w-full text-sm text-left">
-                                    <thead
-                                        class="bg-slate-800 text-gray-400 uppercase font-mono text-xs tracking-wider">
+                                    <thead class="bg-slate-800 text-gray-400 uppercase font-mono text-xs tracking-wider">
                                         <tr>
                                             <th class="px-4 py-4">Detalle</th>
                                             <th class="px-4 py-4 text-center">Tipo</th>
@@ -299,71 +184,39 @@
                                     </thead>
                                     <tbody id="pm-table-body" class="divide-y divide-gray-700/50"></tbody>
                                 </table>
-                                <div
-                                    class="p-3 bg-blue-900/20 text-blue-200 text-[10px] text-center border-t border-gray-700">
-                                    Los rendimientos pasados no garantizan resultados futuros. Gestión activa.</div>
+                                <div class="p-3 bg-blue-900/20 text-blue-200 text-[10px] text-center border-t border-gray-700">Los rendimientos pasados no garantizan resultados futuros. Gestión activa.</div>
                             </div>
                         </div>
                     </div>
-
                     <div id="movimientos-wrapper" class="hidden">
                         <div class="border-t border-gray-700 pt-6 mt-6">
                             <div class="flex items-center gap-3 mb-4">
                                 <div class="h-6 w-1 bg-emerald-500 rounded-full"></div>
-                                <h4 class="text-lg font-bold">Últimos Movimientos Estratégicos</h4>
+                                <h4 class="text-lg font-bold section-title">Últimos Movimientos Estratégicos</h4>
                             </div>
-                            <div class="bg-slate-800/30 border border-gray-700 rounded-xl p-6 w-full">
-                                <p id="pm-movimientos"
-                                    class="text-gray-300 text-sm leading-relaxed font-mono whitespace-pre-wrap"></p>
+                            <div class="bg-slate-800/30 border border-gray-700 rounded-xl p-6 w-full movimientos-box">
+                                <p id="pm-movimientos" class="text-gray-300 text-sm leading-relaxed font-mono whitespace-pre-wrap"></p>
                             </div>
                         </div>
                     </div>
-
-                    <div id="historial-wrapper" class="mt-6 border-t border-gray-700 pt-4 no-print"><button
-                            onclick="toggleHistorial()"
-                            class="w-full flex justify-between items-center bg-slate-800/50 hover:bg-slate-800 p-4 rounded-xl border border-gray-700 transition group">
+                    <div id="historial-wrapper" class="mt-6 border-t border-gray-700 pt-4 no-print">
+                        <button onclick="toggleHistorial()" class="w-full flex justify-between items-center bg-slate-800/50 hover:bg-slate-800 p-4 rounded-xl border border-gray-700 transition group">
                             <div class="flex items-center gap-3">
                                 <div class="h-6 w-1 bg-purple-500 rounded-full"></div>
                                 <h4 class="text-lg font-bold text-gray-300 group-hover:text-white">Historial</h4>
-                            </div><i id="historial-icon"
-                                class="ph-bold ph-caret-down text-gray-400 group-hover:text-white transition-transform duration-300"></i>
+                            </div><i id="historial-icon" class="ph-bold ph-caret-down text-gray-400 group-hover:text-white transition-transform duration-300"></i>
                         </button>
-                        <div id="historial-content"
-                            class="hidden mt-2 bg-slate-900/50 border border-gray-800 rounded-xl p-6">
-                            <p id="pm-historial"
-                                class="text-gray-400 text-sm leading-relaxed font-mono whitespace-pre-wrap pl-4 border-l-2 border-purple-900">
-                            </p>
+                        <div id="historial-content" class="hidden mt-2 bg-slate-900/50 border border-gray-800 rounded-xl p-6">
+                            <p id="pm-historial" class="text-gray-400 text-sm leading-relaxed font-mono whitespace-pre-wrap pl-4 border-l-2 border-purple-900"></p>
                         </div>
                     </div>
-
                     <div class="bg-slate-800/40 border border-slate-700 rounded-xl p-6 mt-8 mb-8 no-print">
-                        <div class="flex items-center gap-2 mb-4"><i
-                                class="ph-duotone ph-calculator text-yellow-500 text-xl"></i>
-                            <h4 class="text-lg font-bold text-white">Simulador de Compra</h4>
-                        </div>
+                        <div class="flex items-center gap-2 mb-4"><i class="ph-duotone ph-calculator text-yellow-500 text-xl"></i><h4 class="text-lg font-bold text-white">Simulador de Compra</h4></div>
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                            <div class="col-span-1 md:col-span-1"><label
-                                    class="text-xs text-slate-400 font-bold uppercase block mb-1">Monto</label><input
-                                    type="number" id="sim-amount" placeholder="Ej: 1000000"
-                                    class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none text-right font-mono">
-                            </div>
-                            <div class="col-span-1"><label
-                                    class="text-xs text-slate-400 font-bold uppercase block mb-1">Moneda</label>
-                                <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-600"><button
-                                        onclick="setSimCurrency('ARS')" id="btn-sim-ars"
-                                        class="flex-1 text-xs font-bold py-1.5 rounded transition bg-blue-600 text-white">ARS</button><button
-                                        onclick="setSimCurrency('USD')" id="btn-sim-usd"
-                                        class="flex-1 text-xs font-bold py-1.5 rounded transition text-slate-400 hover:text-white">USD</button>
-                                </div>
-                            </div>
-                            <div class="col-span-1"><label
-                                    class="text-xs text-slate-400 font-bold uppercase block mb-1">TC
-                                    (Opcional)</label><input type="number" id="sim-tc" placeholder="Ej: 1150"
-                                    class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none text-right font-mono">
-                            </div>
-                            <div class="col-span-1"><button onclick="calculateSimulation()"
-                                    class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 rounded-lg transition flex items-center justify-center gap-2"><i
-                                        class="ph-bold ph-play"></i> Calcular</button></div>
+                            <div class="col-span-1 md:col-span-1"><label class="text-xs text-slate-400 font-bold uppercase block mb-1">Monto</label><input type="number" id="sim-amount" placeholder="Ej: 1000000" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none text-right font-mono"></div>
+                            <div class="col-span-1"><label class="text-xs text-slate-400 font-bold uppercase block mb-1">Moneda</label><div class="flex bg-slate-900 rounded-lg p-1 border border-slate-600"><button onclick="setSimCurrency('ARS')" id="btn-sim-ars" class="flex-1 text-xs font-bold py-1.5 rounded transition bg-blue-600 text-white">ARS</button><button onclick="setSimCurrency('USD')" id="btn-sim-usd" class="flex-1 text-xs font-bold py-1.5 rounded transition text-slate-400 hover:text-white">USD</button></div></div>
+                            <div class="col-span-1"><label class="text-xs text-slate-400 font-bold uppercase block mb-1">TC (Opcional)</label><input type="number" id="sim-tc" placeholder="Ej: 1150" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-blue-500 outline-none text-right font-mono"></div>
+                            <div class="col-span-1"><button onclick="calculateSimulation()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 rounded-lg transition flex items-center justify-center gap-2"><i class="ph-bold ph-play"></i> Calcular</button></div>
                         </div>
                         <div id="sim-result-container" class="hidden mt-6 border-t border-slate-700 pt-4">
                             <table class="w-full text-sm text-left">
@@ -372,16 +225,13 @@
                                         <th class="py-2">Activo</th>
                                         <th class="py-2 text-right">Peso</th>
                                         <th class="py-2 text-right text-white" id="th-sim-origin">Monto</th>
-                                        <th class="py-2 text-right text-yellow-500" id="th-sim-converted">Convertido
-                                        </th>
+                                        <th class="py-2 text-right text-yellow-500" id="th-sim-converted">Convertido</th>
                                     </tr>
                                 </thead>
-                                <tbody id="sim-table-body"
-                                    class="divide-y divide-slate-700/50 text-slate-300 font-mono text-xs"></tbody>
+                                <tbody id="sim-table-body" class="divide-y divide-slate-700/50 text-slate-300 font-mono text-xs"></tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -390,13 +240,8 @@
     <div id="trade-modal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeTradeModal()"></div>
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-xl p-4">
-            <div class="bg-slate-900 border border-gray-700 rounded-2xl shadow-2xl p-6 relative"><button
-                    onclick="closeTradeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i
-                        class="ph ph-x text-2xl"></i></button>
-                <h3 id="tm-title" class="text-xl font-bold text-white mb-2">Trade</h3><span id="tm-date"
-                    class="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded">Fecha</span>
-                <div class="mt-4 max-h-[60vh] overflow-y-auto"><img id="tm-img" src=""
-                        class="w-full rounded-lg mb-4 hidden">
+            <div class="bg-slate-900 border border-gray-700 rounded-2xl shadow-2xl p-6 relative"><button onclick="closeTradeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="ph ph-x text-2xl"></i></button><h3 id="tm-title" class="text-xl font-bold text-white mb-2">Trade</h3><span id="tm-date" class="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded">Fecha</span>
+                <div class="mt-4 max-h-[60vh] overflow-y-auto"><img id="tm-img" src="" class="w-full rounded-lg mb-4 hidden">
                     <p id="tm-body" class="text-gray-300 whitespace-pre-wrap leading-relaxed"></p>
                 </div>
             </div>
@@ -404,15 +249,12 @@
     </div>
 
     <div id="notification-toast" class="fixed top-24 right-5 z-50 hidden max-w-sm w-full">
-        <div
-            class="glass-panel p-4 rounded-xl border-l-4 border-blue-500 shadow-2xl flex items-start gap-4 notification-anim">
-            <div class="bg-blue-500/20 p-2 rounded-full text-blue-400"><i class="ph-fill ph-bell-ringing text-xl"></i>
-            </div>
+        <div class="glass-panel p-4 rounded-xl border-l-4 border-blue-500 shadow-2xl flex items-start gap-4 notification-anim">
+            <div class="bg-blue-500/20 p-2 rounded-full text-blue-400"><i class="ph-fill ph-bell-ringing text-xl"></i></div>
             <div class="flex-1">
                 <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-1">Novedad</h4>
                 <p id="notif-text" class="text-sm text-gray-300 leading-snug"></p>
-            </div><button onclick="closeNotification()" class="text-gray-500 hover:text-white transition"><i
-                    class="ph-bold ph-x"></i></button>
+            </div><button onclick="closeNotification()" class="text-gray-500 hover:text-white transition"><i class="ph-bold ph-x"></i></button>
         </div>
     </div>
 
@@ -428,44 +270,76 @@
         let currentPortfolioIndex = 0;
         let currentSimCurrency = 'ARS';
 
-        // Configuración Global ChartJS
         Chart.defaults.font.family = "'Inter', sans-serif";
         Chart.defaults.color = '#94a3b8';
 
-        try {
-            if (typeof ChartDataLabels !== 'undefined') {
-                Chart.register(ChartDataLabels);
-            }
-        } catch (e) { console.error("Error cargando plugin labels:", e); }
+        try { if (typeof ChartDataLabels !== 'undefined') { Chart.register(ChartDataLabels); } } catch (e) { console.error("Error cargando plugin labels:", e); }
 
-        document.addEventListener("DOMContentLoaded", () => { if (localStorage.getItem("idesk_logged_in") === "true") ocultarLogin(); });
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("idesk_logged_in") === "true") { ocultarLogin(); }
+        });
 
         function intentarLogin(e) {
             e.preventDefault();
             if (document.getElementById("input-user").value === AUTH_CONFIG.userHash && document.getElementById("input-pass").value === AUTH_CONFIG.passHash) {
-                localStorage.setItem("idesk_logged_in", "true"); ocultarLogin();
-            } else { document.getElementById("error-msg").classList.remove("hidden"); }
+                localStorage.setItem("idesk_logged_in", "true");
+                ocultarLogin();
+            } else {
+                document.getElementById("error-msg").classList.remove("hidden");
+            }
         }
 
         function ocultarLogin() {
-            document.getElementById("login-screen").classList.add("hidden-login"); document.getElementById("main-body").classList.remove("overflow-hidden"); fetchData();
+            document.getElementById("login-screen").classList.add("hidden-login");
+            if (sessionStorage.getItem("idesk_disclaimer_accepted") === "true") { iniciarApp(); } else { mostrarDisclaimer(); }
         }
-        function logout() { localStorage.removeItem("idesk_logged_in"); location.reload(); }
+
+        function mostrarDisclaimer() {
+            document.getElementById("disclaimer-screen").classList.remove("hidden");
+            document.getElementById("disclaimer-check").checked = false;
+            toggleDisclaimerBtn();
+        }
+
+        function toggleDisclaimerBtn() {
+            const checked = document.getElementById("disclaimer-check").checked;
+            const btn = document.getElementById("disclaimer-accept-btn");
+            if (checked) { btn.disabled = false; btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition cursor-pointer"; } 
+            else { btn.disabled = true; btn.className = "w-full bg-blue-600/30 text-blue-300/50 font-bold py-3 rounded-lg transition cursor-not-allowed"; }
+        }
+
+        function acceptDisclaimer() {
+            sessionStorage.setItem("idesk_disclaimer_accepted", "true");
+            document.getElementById("disclaimer-screen").classList.add("hidden-disclaimer");
+            iniciarApp();
+        }
+
+        function iniciarApp() {
+            document.getElementById("main-body").classList.remove("overflow-hidden");
+            fetchData();
+        }
+
+        function logout() {
+            localStorage.removeItem("idesk_logged_in");
+            sessionStorage.removeItem("idesk_disclaimer_accepted");
+            location.reload();
+        }
 
         async function fetchData() {
-            const loader = document.getElementById('loading-indicator'); loader.classList.remove('hidden');
+            const loader = document.getElementById('loading-indicator');
+            loader.classList.remove('hidden');
             try {
                 const response = await fetch(SHEET_API_URL);
                 globalData = await response.json();
                 renderPortfolios(globalData.carteras);
                 renderTrades(globalData.trades);
                 checkNotification(globalData.notificacion);
-            } catch (error) { console.error(error); } finally { loader.classList.add('hidden'); }
+            } catch (error) { console.error(error); } 
+            finally { loader.classList.add('hidden'); }
         }
 
-        // --- RENDERIZADO MINIATURAS (DASHBOARD) ---
         function renderPortfolios(carteras) {
-            const container = document.getElementById('portfolio-grid'); container.innerHTML = '';
+            const container = document.getElementById('portfolio-grid');
+            container.innerHTML = '';
             carteras.forEach((cartera, index) => {
                 const chartId = `mini-chart-${index}`;
                 container.insertAdjacentHTML('beforeend', `<div onclick="openPortfolioModal(${index})" class="glass-panel rounded-2xl p-6 flex flex-col card-hover group"><div class="flex justify-between items-start mb-4"><div><h3 class="text-lg font-bold text-white group-hover:text-blue-400 transition">${cartera.nombre}</h3><p class="text-gray-400 text-xs mt-1 truncate w-40">${cartera.descripcion}</p></div><i class="ph-bold ph-arrows-out-simple text-gray-500 group-hover:text-white"></i></div><div class="relative h-40 w-full chart-container-glow"><canvas id="${chartId}"></canvas></div></div>`);
@@ -474,66 +348,65 @@
                     type: 'doughnut',
                     data: {
                         labels: cartera.activos,
-                        datasets: [{
-                            data: cartera.porcentajes,
-                            backgroundColor: cartera.activos.map((_, i) => getColor(i)),
-                            borderWidth: 2,
-                            borderColor: '#1e293b',
-                            hoverOffset: 4,
-                            borderRadius: 20, // Bordes Redondeados Modernos
-                            spacing: 2
-                        }]
+                        datasets: [{ data: cartera.porcentajes, backgroundColor: cartera.activos.map((_, i) => getColor(i)), borderWidth: 2, borderColor: '#1e293b', hoverOffset: 4, borderRadius: 20, spacing: 2 }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '85%', // Anillo fino
-                        plugins: {
-                            legend: { display: false },
-                            datalabels: { display: false },
-                            tooltip: { enabled: false }
-                        }
-                    }
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '85%', plugins: { legend: { display: false }, datalabels: { display: false }, tooltip: { enabled: false } } }
                 });
             });
         }
 
         function renderTrades(trades) {
-            const container = document.getElementById('trades-grid'); container.innerHTML = '';
+            const container = document.getElementById('trades-grid');
+            container.innerHTML = '';
             trades.forEach((trade, index) => {
                 const dateDisplay = new Date(trade.fecha).toLocaleDateString();
                 container.insertAdjacentHTML('beforeend', `<div class="glass-panel rounded-2xl p-6 card-hover border-l-4 border-blue-500"><div class="flex justify-between mb-2"><span class="text-xs font-mono text-blue-400 uppercase">Trade Idea</span><span class="text-xs text-gray-500">${dateDisplay}</span></div><h3 class="text-xl font-bold text-white mb-2">${trade.titulo}</h3><button onclick="openTradeModal(${index})" class="text-sm text-gray-400 hover:text-white flex items-center gap-1 mt-4">Ver análisis <i class="ph-bold ph-arrow-right"></i></button></div>`);
             });
         }
 
-        // --- RENDERIZADO MODAL ---
         function openPortfolioModal(index) {
             currentPortfolioIndex = index;
             const cartera = globalData.carteras[index];
             document.getElementById('pm-title').innerText = cartera.nombre;
             document.getElementById('pm-desc').innerText = cartera.descripcion;
             document.getElementById('pdf-timestamp').innerText = "Vista: " + new Date().toLocaleString();
-
+            
             document.getElementById('sim-result-container').classList.add('hidden');
             document.getElementById('sim-amount').value = '';
             document.getElementById('sim-tc').value = '';
 
             const movDiv = document.getElementById('movimientos-wrapper');
-            if (cartera.movimientos && cartera.movimientos.trim().length > 0) { document.getElementById('pm-movimientos').innerText = cartera.movimientos; movDiv.classList.remove('hidden'); } else { movDiv.classList.add('hidden'); }
+            if (cartera.movimientos && cartera.movimientos.trim().length > 0) {
+                document.getElementById('pm-movimientos').innerText = cartera.movimientos;
+                movDiv.classList.remove('hidden');
+            } else {
+                movDiv.classList.add('hidden');
+            }
+            
             const histText = document.getElementById('pm-historial');
-            if (cartera.historial && cartera.historial.trim().length > 0) { histText.innerText = cartera.historial; histText.classList.remove('text-red-400'); } else { histText.innerText = "No se encontraron datos de historial."; histText.classList.add('text-red-400'); }
+            if (cartera.historial && cartera.historial.trim().length > 0) {
+                histText.innerText = cartera.historial;
+                histText.classList.remove('text-red-400');
+            } else {
+                histText.innerText = "No se encontraron datos de historial.";
+                histText.classList.add('text-red-400');
+            }
+            
             document.getElementById('historial-content').classList.add('hidden');
             document.getElementById('historial-icon').style.transform = 'rotate(0deg)';
-
             updateChartMode('activo');
             document.getElementById('portfolio-modal').classList.remove('hidden');
         }
 
         function updateChartMode(mode) {
             const cartera = globalData.carteras[currentPortfolioIndex];
+            
             ['general', 'activo', 'tipo', 'moneda'].forEach(m => {
                 const btn = document.getElementById(`btn-${m}`);
-                if (btn) { if (m === mode) { btn.classList.remove('btn-inactive'); btn.classList.add('btn-active'); } else { btn.classList.remove('btn-active'); btn.classList.add('btn-inactive'); } }
+                if (btn) {
+                    if (m === mode) { btn.classList.remove('btn-inactive'); btn.classList.add('btn-active'); } 
+                    else { btn.classList.remove('btn-active'); btn.classList.add('btn-inactive'); }
+                }
             });
 
             const tbody = document.getElementById('pm-table-body');
@@ -549,15 +422,9 @@
                 if (monedaLimpia.match(/peso|ars/i)) monedaLimpia = 'ARS';
                 let tipoLimpio = info.tipo ? info.tipo.trim() : 'Otros';
 
-                return {
-                    name: activo, percent: cartera.porcentajes[i], tipo: tipoLimpio, moneda: monedaLimpia,
-                    colorActivo: getColor(i),
-                    colorMoneda: (monedaLimpia === 'USD') ? '#10b981' : (monedaLimpia === 'ARS' ? '#3b82f6' : '#64748b')
-                };
+                return { name: activo, percent: cartera.porcentajes[i], tipo: tipoLimpio, moneda: monedaLimpia, colorActivo: getColor(i), colorMoneda: (monedaLimpia === 'USD') ? '#10b981' : (monedaLimpia === 'ARS' ? '#3b82f6' : '#64748b') };
             }).sort((a, b) => {
-                if (a.moneda < b.moneda) return -1; if (a.moneda > b.moneda) return 1;
-                if (a.tipo < b.tipo) return -1; if (a.tipo > b.tipo) return 1;
-                return b.percent - a.percent;
+                if (a.moneda < b.moneda) return -1; if (a.moneda > b.moneda) return 1; if (a.tipo < b.tipo) return -1; if (a.tipo > b.tipo) return 1; return b.percent - a.percent;
             });
 
             let typeColorMap = {}; let tc = 0;
@@ -572,25 +439,15 @@
 
             function getMidIndex(arr, keyFn) {
                 let mids = new Set(); let start = 0;
-                for (let i = 1; i <= arr.length; i++) {
-                    if (i === arr.length || keyFn(arr[i]) !== keyFn(arr[start])) {
-                        mids.add(Math.floor((start + i - 1) / 2)); start = i;
-                    }
-                }
+                for (let i = 1; i <= arr.length; i++) { if (i === arr.length || keyFn(arr[i]) !== keyFn(arr[start])) { mids.add(Math.floor((start + i - 1) / 2)); start = i; } }
                 return mids;
             }
+
             const midsMon = getMidIndex(fullData, d => d.moneda);
             const midsTyp = getMidIndex(fullData, d => d.moneda + "_" + d.tipo);
 
-            const commonOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: { padding: 20 },
-                animation: { animateScale: true, animateRotate: true },
-                elements: { arc: { borderWidth: 0 } }
-            };
+            const commonOptions = { responsive: true, maintainAspectRatio: false, layout: { padding: 20 }, animation: { animateScale: true, animateRotate: true }, elements: { arc: { borderWidth: 0 } } };
 
-            // MODO GENERAL (SUNBURST)
             if (mode === 'general') {
                 fullData.forEach(d => {
                     let mClass = (d.moneda === 'USD') ? 'text-green-400' : 'text-blue-300';
@@ -602,104 +459,394 @@
                     data: {
                         labels: fullData.map(d => d.name),
                         datasets: [
-                            {
-                                data: fullData.map(d => d.percent), backgroundColor: fullData.map(d => d.colorActivo),
-                                borderWidth: 3, borderColor: '#0f172a', hoverOffset: 10, borderRadius: 4, weight: 2,
-                                datalabels: { color: '#fff', font: { size: 10, weight: 'bold', family: 'Inter' }, formatter: (v, c) => fullData[c.dataIndex].name, display: (c) => c.dataset.data[c.dataIndex] > 3, anchor: 'center', align: 'center', offset: 0 }
-                            },
-                            {
-                                data: fullData.map(d => d.percent), backgroundColor: fullData.map(d => typeColorMap[d.tipo]),
-                                borderWidth: 3, borderColor: '#0f172a', weight: 1.2,
-                                datalabels: { color: 'rgba(255,255,255,0.7)', font: { size: 9, weight: 'bold' }, formatter: (v, c) => midsTyp.has(c.dataIndex) ? fullData[c.dataIndex].tipo : "", display: (c) => midsTyp.has(c.dataIndex), anchor: 'center', align: 'center' }
-                            },
-                            {
-                                data: fullData.map(d => d.percent), backgroundColor: fullData.map(d => d.colorMoneda),
-                                borderWidth: 3, borderColor: '#0f172a', weight: 0.8,
-                                datalabels: { color: '#fff', font: { size: 10, weight: '900' }, formatter: (v, c) => midsMon.has(c.dataIndex) ? fullData[c.dataIndex].moneda : "", display: (c) => midsMon.has(c.dataIndex) }
-                            }
+                            { data: fullData.map(d => d.percent), backgroundColor: fullData.map(d => d.colorActivo), borderWidth: 3, borderColor: '#0f172a', hoverOffset: 10, borderRadius: 4, weight: 2, datalabels: { color: '#fff', font: { size: 10, weight: 'bold', family: 'Inter' }, formatter: (v, c) => fullData[c.dataIndex].name, display: (c) => c.dataset.data[c.dataIndex] > 3, anchor: 'center', align: 'center', offset: 0 } },
+                            { data: fullData.map(d => d.percent), backgroundColor: fullData.map(d => typeColorMap[d.tipo]), borderWidth: 3, borderColor: '#0f172a', weight: 1.2, datalabels: { color: 'rgba(255,255,255,0.7)', font: { size: 9, weight: 'bold' }, formatter: (v, c) => midsTyp.has(c.dataIndex) ? fullData[c.dataIndex].tipo : "", display: (c) => midsTyp.has(c.dataIndex), anchor: 'center', align: 'center' } },
+                            { data: fullData.map(d => d.percent), backgroundColor: fullData.map(d => d.colorMoneda), borderWidth: 3, borderColor: '#0f172a', weight: 0.8, datalabels: { color: '#fff', font: { size: 10, weight: '900' }, formatter: (v, c) => midsMon.has(c.dataIndex) ? fullData[c.dataIndex].moneda : "", display: (c) => midsMon.has(c.dataIndex) } }
                         ]
                     },
-                    options: {
-                        ...commonOptions,
-                        cutout: '25%',
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: '#334155', borderWidth: 1, padding: 10,
-                                titleFont: { family: 'Inter', size: 13 }, bodyFont: { family: 'Inter', size: 12 },
-                                callbacks: { label: (c) => ` ${fullData[c.dataIndex].name}: ${c.raw}%` }
-                            }
-                        }
-                    }
+                    options: { ...commonOptions, cutout: '25%', plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', borderColor: '#334155', borderWidth: 1, padding: 10, titleFont: { family: 'Inter', size: 13 }, bodyFont: { family: 'Inter', size: 12 }, callbacks: { label: (c) => ` ${fullData[c.dataIndex].name}: ${c.raw}%` } } } }
                 });
                 return;
             }
 
-            // MODOS SIMPLES
             let labels = [], data = [], colors = [];
+            
             if (mode === 'activo') {
                 labels = fullData.map(d => d.name); data = fullData.map(d => d.percent); colors = fullData.map(d => d.colorActivo);
-                fullData.forEach(d => { let mColor = (d.moneda === 'USD') ? 'text-green-400' : 'text-blue-300'; tbody.innerHTML += `<tr><td class="px-4 py-2 text-white text-xs">${d.name}</td><td class="px-4 py-2 text-center text-[10px] text-slate-400">${d.tipo}</td><td class="px-4 py-2 text-center text-[10px] ${mColor}">${d.moneda}</td><td class="px-4 py-2 text-right text-blue-300 font-bold text-xs">${d.percent}%</td></tr>`; });
+                fullData.forEach(d => {
+                    let mColor = (d.moneda === 'USD') ? 'text-green-400' : 'text-blue-300';
+                    tbody.innerHTML += `<tr><td class="px-4 py-2 text-white text-xs">${d.name}</td><td class="px-4 py-2 text-center text-[10px] text-slate-400">${d.tipo}</td><td class="px-4 py-2 text-center text-[10px] ${mColor}">${d.moneda}</td><td class="px-4 py-2 text-right text-blue-300 font-bold text-xs">${d.percent}%</td></tr>`;
+                });
             } else {
-                let grouped = {}; fullData.forEach(d => { let k = (mode === 'tipo') ? d.tipo : d.moneda; if (!grouped[k]) grouped[k] = 0; grouped[k] += d.percent; });
-                labels = Object.keys(grouped); data = Object.values(grouped);
-                colors = labels.map((l, i) => (mode === 'moneda' && l === 'USD') ? '#10b981' : (mode === 'moneda' && l === 'ARS' ? '#3b82f6' : getColor(i)));
+                let grouped = {};
+                fullData.forEach(d => { let k = (mode === 'tipo') ? d.tipo : d.moneda; if (!grouped[k]) grouped[k] = 0; grouped[k] += d.percent; });
+                labels = Object.keys(grouped); data = Object.values(grouped); colors = labels.map((l, i) => (mode === 'moneda' && l === 'USD') ? '#10b981' : (mode === 'moneda' && l === 'ARS' ? '#3b82f6' : getColor(i)));
                 labels.forEach((l, i) => { tbody.innerHTML += `<tr><td class="px-4 py-3 font-bold text-white">${l}</td><td colspan="2" class="text-center text-xs text-slate-500">AGRUPADO</td><td class="px-4 py-3 text-right font-mono text-blue-300 font-bold">${data[i].toFixed(2)}%</td></tr>`; });
             }
 
             currentModalChart = new Chart(ctx, {
                 type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data, backgroundColor: colors,
-                        borderColor: '#0f172a', borderWidth: 4, hoverOffset: 15, borderRadius: 8, spacing: 2
-                    }]
-                },
-                options: {
-                    ...commonOptions,
-                    cutout: '60%',
-                    plugins: {
-                        legend: { display: false },
-                        datalabels: {
-                            color: '#fff', font: { weight: 'bold', size: 12, family: 'Inter' },
-                            formatter: (v, c) => c.chart.data.labels[c.dataIndex] + "\n" + Math.round(v) + "%",
-                            display: (c) => c.dataset.data[c.dataIndex] > 3, anchor: 'center', align: 'center', textAlign: 'center'
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.95)', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, padding: 12, cornerRadius: 8, displayColors: true, boxPadding: 4
-                        }
-                    }
-                }
+                data: { labels: labels, datasets: [{ data: data, backgroundColor: colors, borderColor: '#0f172a', borderWidth: 4, hoverOffset: 15, borderRadius: 8, spacing: 2 }] },
+                options: { ...commonOptions, cutout: '60%', plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 12, family: 'Inter' }, formatter: (v, c) => c.chart.data.labels[c.dataIndex] + "\n" + Math.round(v) + "%", display: (c) => c.dataset.data[c.dataIndex] > 3, anchor: 'center', align: 'center', textAlign: 'center' }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.95)', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1, padding: 12, cornerRadius: 8, displayColors: true, boxPadding: 4 } } }
             });
         }
 
-        // Utils
         function setSimCurrency(curr) {
             currentSimCurrency = curr;
             document.getElementById('btn-sim-ars').className = curr === 'ARS' ? 'flex-1 text-xs font-bold py-1.5 rounded transition bg-blue-600 text-white' : 'flex-1 text-xs font-bold py-1.5 rounded transition text-slate-400 hover:text-white';
             document.getElementById('btn-sim-usd').className = curr === 'USD' ? 'flex-1 text-xs font-bold py-1.5 rounded transition bg-green-600 text-white' : 'flex-1 text-xs font-bold py-1.5 rounded transition text-slate-400 hover:text-white';
         }
+
         function calculateSimulation() {
             const amount = parseFloat(document.getElementById('sim-amount').value); const tc = parseFloat(document.getElementById('sim-tc').value) || 1;
             if (!amount || amount <= 0) { alert("Monto inválido"); return; }
             const cartera = globalData.carteras[currentPortfolioIndex]; const tbody = document.getElementById('sim-table-body'); tbody.innerHTML = '';
             document.getElementById('th-sim-origin').innerText = `Monto (${currentSimCurrency})`; document.getElementById('th-sim-converted').innerText = `Monto ${currentSimCurrency === 'ARS' ? 'USD' : 'ARS'}`;
             cartera.activos.forEach((activo, i) => {
-                const peso = cartera.porcentajes[i]; const mOrigen = amount * (peso / 100);
-                const mConv = (currentSimCurrency === 'ARS') ? mOrigen / tc : mOrigen * tc;
+                const peso = cartera.porcentajes[i]; const mOrigen = amount * (peso / 100); const mConv = (currentSimCurrency === 'ARS') ? mOrigen / tc : mOrigen * tc;
                 tbody.innerHTML += `<tr class="hover:bg-slate-700/30"><td class="py-2 font-bold text-white">${activo}</td><td class="py-2 text-right text-slate-400">${peso}%</td><td class="py-2 text-right font-bold text-white">${new Intl.NumberFormat('es-AR', { style: 'currency', currency: currentSimCurrency }).format(mOrigen)}</td><td class="py-2 text-right text-yellow-400">${new Intl.NumberFormat('es-AR', { style: 'currency', currency: currentSimCurrency === 'ARS' ? 'USD' : 'ARS' }).format(mConv)}</td></tr>`;
             });
             document.getElementById('sim-result-container').classList.remove('hidden');
         }
-        function toggleHistorial() { const c = document.getElementById('historial-content'); const i = document.getElementById('historial-icon'); if (c.classList.contains('hidden')) { c.classList.remove('hidden'); i.style.transform = 'rotate(180deg)'; } else { c.classList.add('hidden'); i.style.transform = 'rotate(0deg)'; } }
+
+        function toggleHistorial() {
+            const c = document.getElementById('historial-content'); const i = document.getElementById('historial-icon');
+            if (c.classList.contains('hidden')) { c.classList.remove('hidden'); i.style.transform = 'rotate(180deg)'; } else { c.classList.add('hidden'); i.style.transform = 'rotate(0deg)'; }
+        }
+
         function closePortfolioModal() { document.getElementById('portfolio-modal').classList.add('hidden'); }
-        function downloadPortfolioPDF() { const e = document.getElementById('printable-area'); const b = document.getElementById('btn-download-pdf'); const t = b.innerHTML; b.innerHTML = '<i class="ph ph-spinner animate-spin"></i> ...'; e.classList.add('pdf-mode'); html2pdf().set({ margin: [10, 10], filename: `IDesk_Reporte.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, backgroundColor: '#0f172a' }, jsPDF: { unit: 'mm', format: 'a4' } }).from(e).save().then(() => { e.classList.remove('pdf-mode'); b.innerHTML = t; }); }
-        function checkNotification(m) { if (m && m.trim() !== "") { document.getElementById('notif-text').innerText = m; document.getElementById('notification-toast').classList.remove('hidden'); } }
-        function closeNotification() { document.getElementById('notification-toast').classList.add('hidden'); }
-        function openTradeModal(i) { const t = globalData.trades[i]; document.getElementById('tm-title').innerText = t.titulo; document.getElementById('tm-date').innerText = new Date(t.fecha).toLocaleDateString(); document.getElementById('tm-body').innerHTML = t.tesis; const img = document.getElementById('tm-img'); if (t.imagen) { img.src = t.imagen; img.classList.remove('hidden'); } else { img.classList.add('hidden'); } document.getElementById('trade-modal').classList.remove('hidden'); }
-        function closeTradeModal() { document.getElementById('trade-modal').classList.add('hidden'); }
-        function getColor(i) { return ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#6366f1', '#14b8a6'][i % 9]; }
+
+        // ===== FUNCION DE DESCARGA PDF INTEGRADA =====
+        async function downloadPortfolioPDF() {
+            const btn = document.getElementById('btn-download-pdf');
+            const originalBtnText = btn.innerHTML;
+            
+            if (!window.jspdf) {
+                alert("La librería de descarga no ha cargado correctamente. Por favor recarga la página.");
+                return;
+            }
+
+            btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Generando...';
+            btn.disabled = true;
+
+            try {
+                const cartera = globalData.carteras[currentPortfolioIndex];
+                const portfolioName = cartera.nombre.replace(/[^a-zA-Z0-9\u00e1\u00e9\u00ed\u00f3\u00fa\u00f1\u00c1\u00c9\u00cd\u00d3\u00da\u00d1 ]/g, '').replace(/\s+/g, '_');
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const W = pdf.internal.pageSize.getWidth();
+                const H = pdf.internal.pageSize.getHeight();
+                const mg = 15;
+                const cw = W - mg * 2;
+                let y = mg;
+
+                const blue = [37, 99, 235];
+                const black = [17, 24, 39];
+                const gray = [107, 114, 128];
+                const darkGray = [55, 65, 81];
+                const lightBg = [243, 244, 246];
+                const green = [5, 150, 105];
+                const blueLight = [239, 246, 255];
+
+                function checkPage(needed) {
+                    if (y + needed > H - mg) {
+                        pdf.addPage();
+                        y = mg;
+                    }
+                }
+
+                // --- HEADER ---
+                pdf.setFontSize(9);
+                pdf.setTextColor(...blue);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('PORTAFOLIO', mg, y);
+                
+                pdf.setFontSize(12);
+                pdf.setTextColor(...black);
+                pdf.text('I-Desk', W - mg, y, { align: 'right' });
+                y += 5;
+                
+                pdf.setFontSize(9);
+                pdf.setTextColor(...blue);
+                pdf.text('Asset Management', W - mg, y, { align: 'right' });
+                y += 3;
+                
+                pdf.setFontSize(22);
+                pdf.setTextColor(...black);
+                pdf.setFont('helvetica', 'bold');
+                const titleLines = pdf.splitTextToSize(document.getElementById('pm-title').innerText, cw * 0.65);
+                pdf.text(titleLines, mg, y);
+                y += titleLines.length * 9;
+                
+                pdf.setFontSize(7);
+                pdf.setTextColor(...gray);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text('Vista: ' + new Date().toLocaleString(), W - mg, y - 2, { align: 'right' });
+                y += 2;
+                
+                pdf.setFontSize(8);
+                pdf.setTextColor(...darkGray);
+                pdf.setFont('helvetica', 'normal');
+                const descLines = pdf.splitTextToSize(document.getElementById('pm-desc').innerText, cw * 0.7);
+                pdf.text(descLines, mg, y);
+                y += descLines.length * 3.5 + 4;
+                
+                pdf.setDrawColor(209, 213, 219);
+                pdf.setLineWidth(0.5);
+                pdf.line(mg, y, W - mg, y);
+                y += 8;
+
+                // --- PREPARAR GRÁFICO (Cambio a negro y pausa) ---
+                if (currentModalChart) {
+                    currentModalChart.data.datasets.forEach(function(ds) {
+                        if (ds.datalabels) {
+                            ds._origLabelColor = ds.datalabels.color;
+                            ds.datalabels.color = '#000000'; // TEXTO EN NEGRO
+                        }
+                    });
+
+                    if (currentModalChart.options.plugins && currentModalChart.options.plugins.datalabels) {
+                        currentModalChart.options.plugins._origLabelColor = currentModalChart.options.plugins.datalabels.color;
+                        currentModalChart.options.plugins.datalabels.color = '#000000'; // TEXTO EN NEGRO
+                    }
+
+                    currentModalChart.data.datasets.forEach(function(ds) {
+                        ds._origBorder = ds.borderColor;
+                        ds.borderColor = '#ffffff'; // Borde blanco
+                    });
+                    
+                    currentModalChart.update('none');
+                }
+
+                // PAUSA CLAVE DE 100 MILISEGUNDOS PARA QUE SE PINTE EL NEGRO
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                const chartCanvas = document.getElementById('modal-chart');
+                const chartImg = chartCanvas.toDataURL('image/png', 1.0);
+
+                // --- RESTAURAR GRÁFICO ---
+                if (currentModalChart) {
+                    currentModalChart.data.datasets.forEach(function(ds) {
+                        if (ds.datalabels && ds._origLabelColor !== undefined) {
+                            ds.datalabels.color = ds._origLabelColor;
+                            delete ds._origLabelColor;
+                        }
+                        if (ds._origBorder !== undefined) {
+                            ds.borderColor = ds._origBorder;
+                            delete ds._origBorder;
+                        }
+                    });
+                    if (currentModalChart.options.plugins && currentModalChart.options.plugins.datalabels && currentModalChart.options.plugins._origLabelColor !== undefined) {
+                        currentModalChart.options.plugins.datalabels.color = currentModalChart.options.plugins._origLabelColor;
+                        delete currentModalChart.options.plugins._origLabelColor;
+                    }
+                    currentModalChart.update('none');
+                }
+
+                // --- RENDERIZAR TABLA Y GRÁFICO ---
+                const chartW = cw * 0.42;
+                const chartH = chartW;
+                const tableX = mg + chartW + 8;
+                const tableW = cw - chartW - 8;
+                
+                checkPage(chartH + 10);
+                const sectionStartY = y;
+                
+                pdf.addImage(chartImg, 'PNG', mg, y, chartW, chartH);
+                
+                let ty = sectionStartY;
+                pdf.setFillColor(...blue);
+                pdf.rect(tableX, ty, 1.5, 6, 'F');
+                
+                pdf.setFontSize(10);
+                pdf.setTextColor(...black);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Composicion de Activos', tableX + 4, ty + 4.5);
+                ty += 10;
+                
+                const cols = [
+                    { label: 'DETALLE', x: tableX, w: tableW * 0.38, align: 'left' },
+                    { label: 'TIPO', x: tableX + tableW * 0.38, w: tableW * 0.22, align: 'center' },
+                    { label: 'MONEDA', x: tableX + tableW * 0.6, w: tableW * 0.2, align: 'center' },
+                    { label: 'PESO', x: tableX + tableW * 0.8, w: tableW * 0.2, align: 'right' }
+                ];
+                
+                pdf.setFillColor(...lightBg);
+                pdf.rect(tableX, ty - 3, tableW, 7, 'F');
+                pdf.setFontSize(6);
+                pdf.setTextColor(...darkGray);
+                pdf.setFont('helvetica', 'bold');
+                
+                cols.forEach(function(c) {
+                    var tx = c.align === 'right' ? c.x + c.w - 2 : (c.align === 'center' ? c.x + c.w / 2 : c.x + 2);
+                    pdf.text(c.label, tx, ty + 1, { align: c.align });
+                });
+                ty += 7;
+                
+                var fullData = cartera.activos.map(function(activo, i) {
+                    var tickerKey = activo ? activo.trim().toUpperCase() : "DESC";
+                    var info = globalData.clasificador[tickerKey] || { tipo: 'Otros', moneda: 'Otros' };
+                    var moneda = info.moneda ? info.moneda.trim() : 'Otros';
+                    if (moneda.match(/dolar|usd|usdt/i)) moneda = 'USD';
+                    if (moneda.match(/peso|ars/i)) moneda = 'ARS';
+                    var tipo = info.tipo ? info.tipo.trim() : 'Otros';
+                    return { name: activo, percent: cartera.porcentajes[i], tipo: tipo, moneda: moneda };
+                }).sort(function(a, b) {
+                    if (a.moneda < b.moneda) return -1;
+                    if (a.moneda > b.moneda) return 1;
+                    return b.percent - a.percent;
+                });
+                
+                pdf.setFontSize(7);
+                fullData.forEach(function(row, idx) {
+                    if (ty + 6 > H - mg) {
+                        pdf.addPage();
+                        ty = mg;
+                    }
+                    if (idx % 2 === 0) {
+                        pdf.setFillColor(250, 250, 250);
+                        pdf.rect(tableX, ty - 3, tableW, 6, 'F');
+                    }
+                    
+                    pdf.setDrawColor(229, 231, 235);
+                    pdf.setLineWidth(0.2);
+                    pdf.line(tableX, ty + 2.5, tableX + tableW, ty + 2.5);
+                    
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setTextColor(...black);
+                    pdf.text(row.name || '', cols[0].x + 2, ty);
+                    
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setTextColor(...gray);
+                    pdf.text(row.tipo, cols[1].x + cols[1].w / 2, ty, { align: 'center' });
+                    
+                    if (row.moneda === 'USD') pdf.setTextColor(...green);
+                    else if (row.moneda === 'ARS') pdf.setTextColor(...blue);
+                    else pdf.setTextColor(...gray);
+                    
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text(row.moneda, cols[2].x + cols[2].w / 2, ty, { align: 'center' });
+                    
+                    pdf.setTextColor(...blue);
+                    pdf.text(row.percent + '%', cols[3].x + cols[3].w - 2, ty, { align: 'right' });
+                    
+                    ty += 5.5;
+                });
+                
+                pdf.setFillColor(...blueLight);
+                pdf.rect(tableX, ty - 2, tableW, 6, 'F');
+                pdf.setFontSize(5.5);
+                pdf.setTextColor(30, 64, 175);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text('Los rendimientos pasados no garantizan resultados futuros.', tableX + tableW / 2, ty + 1.5, { align: 'center' });
+                
+                y = Math.max(sectionStartY + chartH, ty) + 10;
+
+                // --- MOVIMIENTOS ---
+                var movText = document.getElementById('pm-movimientos').innerText;
+                var showMov = !document.getElementById('movimientos-wrapper').classList.contains('hidden');
+                
+                if (showMov && movText && movText.trim()) {
+                    checkPage(20);
+                    pdf.setDrawColor(209, 213, 219);
+                    pdf.setLineWidth(0.5);
+                    pdf.line(mg, y, W - mg, y);
+                    y += 8;
+                    
+                    pdf.setFillColor(...green);
+                    pdf.rect(mg, y - 4, 1.5, 6, 'F');
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(...black);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text('Ultimos Movimientos Estrategicos', mg + 4, y);
+                    y += 6;
+                    
+                    pdf.setFontSize(7);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setTextColor(...darkGray);
+                    var movLines = pdf.splitTextToSize(movText, cw - 12);
+                    var boxH = movLines.length * 3.2 + 8;
+                    
+                    checkPage(boxH);
+                    pdf.setFillColor(249, 250, 251);
+                    pdf.setDrawColor(209, 213, 219);
+                    pdf.roundedRect(mg, y, cw, boxH, 2, 2, 'FD');
+                    pdf.text(movLines, mg + 6, y + 5);
+                    y += boxH + 6;
+                }
+
+                // --- DISCLAIMER ---
+                checkPage(30);
+                y += 10;
+                pdf.setDrawColor(209, 213, 219);
+                pdf.setLineWidth(0.2);
+                pdf.line(mg, y, W - mg, y);
+                y += 5;
+                
+                pdf.setFontSize(6);
+                pdf.setTextColor(...gray);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('AVISO LEGAL — I-DESK S.A.S.', mg, y);
+                y += 4;
+                
+                pdf.setFont('helvetica', 'normal');
+                var legalText = "Las carteras de inversión publicadas en este sitio constituyen carteras modelo elaboradas con fines exclusivamente informativos e ilustrativos, y no constituyen recomendaciones de inversión, ni oferta pública de valores negociables en los términos de la normativa vigente del mercado de capitales de la República Argentina. Las inversiones en instrumentos financieros implican riesgos y los rendimientos pasados no garantizan resultados futuros, pudiendo producirse incluso la pérdida total o parcial del capital invertido. La información contenida tiene carácter meramente informativo y educativo, no constituye asesoramiento financiero personalizado, conforme lo dispuesto en la Ley de Mercado de Capitales N° 26.831 y las normas de la CNV. I-DESK S.A.S. no garantiza la exactitud, integridad o actualización de dicha información. Se recomienda a los inversores evaluar de manera independiente la conveniencia de cualquier inversión. El acceso al presente sitio implica el conocimiento y aceptación de estos términos. Queda prohibida la reproducción total o parcial sin autorización expresa de I-DESK S.A.S.";
+                
+                var legalLines = pdf.splitTextToSize(legalText, cw);
+                pdf.text(legalLines, mg, y, { align: 'justify', maxWidth: cw });
+                y += legalLines.length * 2.5 + 5;
+
+                // --- FOOTER ---
+                pdf.setFontSize(6);
+                pdf.setTextColor(...gray);
+                pdf.text('© 2026 I-Desk Asset Management', W / 2, H - 8, { align: 'center' });
+
+                // EJECUTA LA DESCARGA
+                pdf.save('IDesk_' + portfolioName + '_' + new Date().toISOString().slice(0, 10) + '.pdf');
+
+            } catch (err) {
+                console.error('PDF generation error:', err);
+                alert('Error generando PDF: ' + err.message);
+            }
+            
+            btn.innerHTML = originalBtnText;
+            btn.disabled = false;
+        }
+
+        function checkNotification(m) {
+            if (m && m.trim() !== "") {
+                document.getElementById('notif-text').innerText = m;
+                document.getElementById('notification-toast').classList.remove('hidden');
+            }
+        }
+
+        function closeNotification() {
+            document.getElementById('notification-toast').classList.add('hidden');
+        }
+
+        function openTradeModal(i) {
+            const t = globalData.trades[i];
+            document.getElementById('tm-title').innerText = t.titulo;
+            document.getElementById('tm-date').innerText = new Date(t.fecha).toLocaleDateString();
+            document.getElementById('tm-body').innerHTML = t.tesis;
+            const img = document.getElementById('tm-img');
+            if (t.imagen) {
+                img.src = t.imagen;
+                img.classList.remove('hidden');
+            } else {
+                img.classList.add('hidden');
+            }
+            document.getElementById('trade-modal').classList.remove('hidden');
+        }
+
+        function closeTradeModal() {
+            document.getElementById('trade-modal').classList.add('hidden');
+        }
+
+        function getColor(i) {
+            return ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#6366f1', '#14b8a6'][i % 9];
+        }
     </script>
 </body>
 
